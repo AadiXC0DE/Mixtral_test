@@ -14,14 +14,13 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
+    const text=""
     try {
       // Call Mistral API
       const response = await client.chat({
         model: 'mistral-small',
-        messages: [{ role: 'user', content: "You are a helpful tutor, give answers to the questions in brief and deduce final answer step wise, find the closest answer, also write the final answer explicitly with the option" }],
-        messages: [{ role: 'user', content: input }],
-        temperature: 0.2,
-        stream: true,
+        messages: [{ role: 'user', content: `You are a helpful tutor, give answers to the questions in brief and deduce final answer step wise, find the closest answer, also write the final answer explicitly with the option, Question: ${input}` }],
+        temperature: 0.3,
 
       });
 
