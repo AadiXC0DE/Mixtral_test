@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import MistralClient from '@mistralai/mistralai';
 
-const apiKey = "lGCvDqYhakAI6sAiIcD6tWxC7T5zhihb";
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const client = new MistralClient(apiKey);
 
 export default function Home() {
@@ -20,6 +20,9 @@ export default function Home() {
         model: 'mistral-small',
         messages: [{ role: 'user', content: "You are a helpful tutor, give answers to the questions in brief and deduce final answer step wise, find the closest answer, also write the final answer explicitly with the option" }],
         messages: [{ role: 'user', content: input }],
+        temperature: 0.2,
+        stream: true,
+
       });
 
       // Set chat response
