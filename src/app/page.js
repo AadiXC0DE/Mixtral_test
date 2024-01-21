@@ -122,18 +122,19 @@ export default function Home() {
   };
 
   return (
+    <div className="bg-gray-100">
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Chat with Mistral AI</h1>
+      <h1 className="text-3xl font-bold text-black mb-4">Doubt Solver</h1>
 
       <div className="flex flex-wrap mb-4">
         <input
           type="text"
           value={input}
           onChange={handleInputChange}
-          className="border text-black p-2 flex-grow mb-2 sm:mr-2 sm:mb-0"
+          className="border bg-yellow-100 text-black p-2 flex-grow mb-2 sm:mr-2 sm:mb-0"
           placeholder="Type your question..."
         />
-        <label className="relative cursor-pointer ml-2 bg-blue-500 text-white p-2 rounded mb-2 sm:mb-0 flex items-center">
+        <label className="relative cursor-pointer ml-2 bg-yellow-300 text-black p-2 rounded mb-2 sm:mb-0 flex items-center">
           <input
             type="file"
             onChange={handleImageChange}
@@ -145,13 +146,13 @@ export default function Home() {
         </label>
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 ml-2 text-white p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+          className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
         >
           Submit
         </button>
         <button
           onClick={handleImageSend}
-          className="bg-blue-500 text-white p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+          className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
         >
           Submit Image
         </button>
@@ -197,10 +198,11 @@ export default function Home() {
       )}
 
       {chatResponse && (
-        <div className="bg-gray-200 p-4 rounded text-black text-md text-medium">
+        <div className="bg-yellow-50 p-4 rounded text-black text-md text-medium">
           <Latex>{chatResponse}</Latex>
         </div>
       )}
+    </div>
     </div>
   );
 }
