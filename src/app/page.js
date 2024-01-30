@@ -10,8 +10,6 @@ import axios from "axios";
 import "cropperjs/dist/cropper.css";
 
 import Image from "next/image";
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const client = new MistralClient(apiKey);
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -19,6 +17,7 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const previewCanvasRef = useRef();
+
   const handleInputChange = (e) => {
     setInput(e.target.value);
   };
@@ -28,6 +27,8 @@ export default function Home() {
     const cropper = cropperRef.current?.cropper;
     console.log(cropper.getCroppedCanvas().toDataURL());
   };
+
+  //cropping image
   const handleCrop = () => {
     console.log("Cropping initiated");
     if (image) {
@@ -57,9 +58,8 @@ export default function Home() {
     }
   };
   const handleSubmit = async () => {
-    const text = "";
     try {
-      // Call Mistral API
+      // Call Lambda function
       const response = await axios.post(
         "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
         {
@@ -81,14 +81,9 @@ export default function Home() {
       console.error("Error calling Mistral API:", error);
     }
   };
-  // @Adi Do what ever u wish to do with this cropped image
   //dicretly converting to base64 in handleImageSend
-  const logBase64Data = () => {
-    if (croppedImage) {
-      console.log("Base64 Data:", croppedImage.split(",")[1]);
-    }
-  };
 
+  //submitting image
   const handleImageSend = async () => {
     try {
       if (!croppedImage) {
