@@ -60,19 +60,20 @@ export default function Home() {
     const text = "";
     try {
       // Call Mistral API
-      const response = await client.chat({
-        model: "mistral-small",
-        messages: [
-          {
-            role: "user",
-            content: `You are a helpful tutor, write in simple Latex language in proper format (showing all symbols properly) to the questions in brief and deduce final answer step wise, find the closest answer if options are given. Question: {}${input}`,
+      const response = await axios.post(
+        "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
+        {
+          chatbot: `${input}`,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-        ],
-        temperature: 0.3,
-      });
+        }
+      );
 
       // Set chat response
-      setChatResponse(response.choices[0].message.content);
+      setChatResponse(response.data);
 
       // Clear input
       setInput("");
