@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import MistralClient from "@mistralai/mistralai";
 import { CameraIcon } from "@heroicons/react/solid";
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
@@ -25,7 +24,6 @@ export default function Home() {
   const cropperRef = useRef();
   const onCrop = () => {
     const cropper = cropperRef.current?.cropper;
-    console.log(cropper.getCroppedCanvas().toDataURL());
   };
 
   //cropping image
@@ -44,7 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     if (croppedImage) {
-      console.log("Cropped Image hu", croppedImage);
+      console.log("Cropped Image", croppedImage);
     }
   }, [croppedImage]);
   const handleImageChange = (e) => {
@@ -105,7 +103,6 @@ export default function Home() {
         }
       );
 
-      console.log(response.data);
       setChatResponse(response.data);
 
       setImage(null);
