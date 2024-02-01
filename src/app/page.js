@@ -13,6 +13,7 @@ import Image from "next/image";
 export default function Home() {
   const [input, setInput] = useState("");
   const [chatResponse, setChatResponse] = useState(null);
+  const [question, setQuestion] = useState(null);
   const [image, setImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const previewCanvasRef = useRef();
@@ -71,7 +72,8 @@ export default function Home() {
       );
 
       // Set chat response
-      setChatResponse(response.data);
+      setQuestion(input);
+      setChatResponse(response.data.answer);
 
       // Clear input
       setInput("");
@@ -103,8 +105,8 @@ export default function Home() {
         }
       );
 
-      setChatResponse(response.data);
-
+      setQuestion(response.data.question);
+      setChatResponse(response.data.answer);
       setImage(null);
     } catch (error) {
       console.error("Error calling the API:", error);
@@ -193,8 +195,15 @@ export default function Home() {
           </div>
         )}
 
+        {question && (
+          <div className="bg-yellow-100 pt-4 pl-4 pr-4 pb-2 rounded text-black text-md font-medium">
+            <Latex>{`Q: ${question}`}</Latex>
+          </div>
+        )}
+
         {chatResponse && (
-          <div className="bg-yellow-50 p-4 rounded text-black text-md text-medium">
+          <div className="bg-yellow-50 p-4 rounded text-black text-md">
+            <p className="font-medium">Answer:</p>
             <Latex>{chatResponse}</Latex>
           </div>
         )}
