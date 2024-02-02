@@ -13,13 +13,19 @@ import Image from "next/image";
 export default function Home() {
   const [input, setInput] = useState("");
   const [chatResponse, setChatResponse] = useState(null);
+  const [imageInput, setImageInput] = useState("");
   const [question, setQuestion] = useState(null);
   const [image, setImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [showTextInput, setShowTextInput] = useState(false);
   const previewCanvasRef = useRef();
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
+  };
+
+  const handleImageInputChange = (e) => {
+    setImageInput(e.target.value);
   };
 
   const cropperRef = useRef();
@@ -30,6 +36,7 @@ export default function Home() {
   //cropping image
   const handleCrop = () => {
     console.log("Cropping initiated");
+    setShowTextInput(true);
     if (image) {
       const cropper = cropperRef.current?.cropper;
       const croppedCanvas = cropper.getCroppedCanvas();
@@ -97,6 +104,7 @@ export default function Home() {
         "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
         {
           base64: base64Data,
+          image_context: showTextInput ? imageInput : " ",
         },
         {
           headers: {
@@ -108,6 +116,7 @@ export default function Home() {
       setQuestion(response.data.question);
       setChatResponse(response.data.answer);
       setImage(null);
+      setShowTextInput(false);
     } catch (error) {
       console.error("Error calling the API:", error);
     }
@@ -149,6 +158,19 @@ export default function Home() {
             Submit Image
           </button>
         </div>
+
+        {showTextInput && (
+          <div className="flex flex-col">
+            <h1 className="font-medium text-black">Enter query for image...</h1>
+          <input
+            type="text"
+            value={imageInput}
+            onChange={handleImageInputChange}
+            className="border bg-yellow-100 text-black p-2 mb-2 flex-grow"
+            placeholder="Type your question for and click Submit Image..."
+          />
+          </div>
+        )}
 
         {image && (
           <div className="mb-4">
