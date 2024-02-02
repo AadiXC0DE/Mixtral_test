@@ -5,6 +5,7 @@ import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import Cropper from "react-cropper";
 import axios from "axios";
+import Loader from "./components/Loader";
 
 import "cropperjs/dist/cropper.css";
 
@@ -18,6 +19,7 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [showTextInput, setShowTextInput] = useState(false);
+  const [loading, setLoading] = useState(false); //loader
   const previewCanvasRef = useRef();
 
   const handleInputChange = (e) => {
@@ -65,6 +67,7 @@ export default function Home() {
   };
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       // Call Lambda function
       const response = await axios.post(
         "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
@@ -86,6 +89,8 @@ export default function Home() {
       setInput("");
     } catch (error) {
       console.error("Error calling Mistral API:", error);
+    } finally{
+      setLoading(false);
     }
   };
   //dicretly converting to base64 in handleImageSend
@@ -93,6 +98,8 @@ export default function Home() {
   //submitting image
   const handleImageSend = async () => {
     try {
+      setImage(null);
+      setLoading(true);
       if (!croppedImage) {
         console.error("No image data available.");
         return;
@@ -115,10 +122,11 @@ export default function Home() {
 
       setQuestion(response.data.question);
       setChatResponse(response.data.answer);
-      setImage(null);
       setShowTextInput(false);
     } catch (error) {
       console.error("Error calling the API:", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -216,6 +224,8 @@ export default function Home() {
             )}
           </div>
         )}
+
+        {loading && <Loader />}
 
         {question && (
           <div className="bg-yellow-100 pt-4 pl-4 pr-4 pb-2 rounded text-black text-md font-medium">
