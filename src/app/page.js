@@ -155,13 +155,13 @@ export default function Home() {
           </label>
           <button
             onClick={handleSubmit}
-            className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
           >
             Submit
           </button>
           <button
             onClick={handleImageSend}
-            className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
           >
             Submit Image
           </button>
