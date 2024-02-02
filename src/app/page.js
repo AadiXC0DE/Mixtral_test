@@ -37,16 +37,12 @@ export default function Home() {
 
   //cropping image
   const handleCrop = () => {
-    console.log("Cropping initiated");
     setShowTextInput(true);
     if (image) {
       const cropper = cropperRef.current?.cropper;
       const croppedCanvas = cropper.getCroppedCanvas();
-      console.log("I m croppedCanvas", croppedCanvas);
       const dataUrl = croppedCanvas.toDataURL();
       setCroppedImage(dataUrl);
-      console.log("dataUrl hu", dataUrl);
-      console.log("croppedImage v yahi hai", croppedImage);
     }
   };
 
