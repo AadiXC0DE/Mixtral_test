@@ -5,6 +5,7 @@ import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import Cropper from "react-cropper";
 import axios from "axios";
+import Loader from "./components/Loader";
 
 import "cropperjs/dist/cropper.css";
 
@@ -13,13 +14,20 @@ import Image from "next/image";
 export default function Home() {
   const [input, setInput] = useState("");
   const [chatResponse, setChatResponse] = useState(null);
+  const [imageInput, setImageInput] = useState("");
   const [question, setQuestion] = useState(null);
   const [image, setImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [showTextInput, setShowTextInput] = useState(false);
+  const [loading, setLoading] = useState(false); //loader
   const previewCanvasRef = useRef();
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
+  };
+
+  const handleImageInputChange = (e) => {
+    setImageInput(e.target.value);
   };
 
   const cropperRef = useRef();
@@ -29,15 +37,12 @@ export default function Home() {
 
   //cropping image
   const handleCrop = () => {
-    console.log("Cropping initiated");
+    setShowTextInput(true);
     if (image) {
       const cropper = cropperRef.current?.cropper;
       const croppedCanvas = cropper.getCroppedCanvas();
-      console.log("I m croppedCanvas", croppedCanvas);
       const dataUrl = croppedCanvas.toDataURL();
       setCroppedImage(dataUrl);
-      console.log("dataUrl hu", dataUrl);
-      console.log("croppedImage v yahi hai", croppedImage);
     }
   };
 
@@ -58,6 +63,7 @@ export default function Home() {
   };
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       // Call Lambda function
       const response = await axios.post(
         "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
@@ -79,6 +85,8 @@ export default function Home() {
       setInput("");
     } catch (error) {
       console.error("Error calling Mistral API:", error);
+    } finally{
+      setLoading(false);
     }
   };
   //dicretly converting to base64 in handleImageSend
@@ -86,6 +94,8 @@ export default function Home() {
   //submitting image
   const handleImageSend = async () => {
     try {
+      setImage(null);
+      setLoading(true);
       if (!croppedImage) {
         console.error("No image data available.");
         return;
@@ -97,6 +107,7 @@ export default function Home() {
         "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
         {
           base64: base64Data,
+          image_context: showTextInput ? imageInput : " ",
         },
         {
           headers: {
@@ -107,9 +118,11 @@ export default function Home() {
 
       setQuestion(response.data.question);
       setChatResponse(response.data.answer);
-      setImage(null);
+      setShowTextInput(false);
     } catch (error) {
       console.error("Error calling the API:", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -138,17 +151,30 @@ export default function Home() {
           </label>
           <button
             onClick={handleSubmit}
-            className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
           >
             Submit
           </button>
           <button
             onClick={handleImageSend}
-            className="bg-yellow-300 text-black ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0"
+            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
           >
             Submit Image
           </button>
         </div>
+
+        {showTextInput && (
+          <div className="flex flex-col">
+            <h1 className="font-medium text-black">Enter query for image...</h1>
+          <input
+            type="text"
+            value={imageInput}
+            onChange={handleImageInputChange}
+            className="border bg-yellow-100 text-black p-2 mb-2 flex-grow"
+            placeholder="Type your question for and click Submit Image..."
+          />
+          </div>
+        )}
 
         {image && (
           <div className="mb-4">
@@ -194,6 +220,8 @@ export default function Home() {
             )}
           </div>
         )}
+
+        {loading && <Loader />}
 
         {question && (
           <div className="bg-yellow-100 pt-4 pl-4 pr-4 pb-2 rounded text-black text-md font-medium">
