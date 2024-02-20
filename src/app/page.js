@@ -104,7 +104,7 @@ export default function Home() {
       const base64Data = croppedImage.split(",")[1];
 
       const response = await axios.post(
-        "https://swa3p4ickqt523o7c3am5tdege0iplck.lambda-url.us-east-1.on.aws/",
+        "https://242ljkgpycktbh7r7xtu5xligq0iryus.lambda-url.eu-north-1.on.aws/",
         {
           base64: base64Data,
           image_context: showTextInput ? imageInput : " ",
@@ -202,7 +202,7 @@ export default function Home() {
 
             {croppedImage && (
               <div>
-                <h3 className="text-xl mb-2">Cropped Image Preview</h3>
+                <h3 className="text-xl text-black mb-2">Cropped Image Preview</h3>
                 <Image
                   width={300}
                   height={200}
