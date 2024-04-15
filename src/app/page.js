@@ -6,6 +6,7 @@ import Latex from "react-latex-next";
 import Cropper from "react-cropper";
 import axios from "axios";
 import Loader from "./components/Loader";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 import "cropperjs/dist/cropper.css";
 
@@ -127,6 +128,7 @@ export default function Home() {
   };
 
   return (
+    <MathJaxContext>
     <div className="bg-gray-100 h-screen">
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold text-black mb-4">Doubt Solver</h1>
@@ -225,17 +227,18 @@ export default function Home() {
 
         {question && (
           <div className="bg-yellow-100 pt-4 pl-4 pr-4 pb-2 rounded text-black text-md font-medium">
-            <Latex>{`Q: ${question}`}</Latex>
+            <MathJax>{`Q: ${question}`}</MathJax>
           </div>
         )}
 
         {chatResponse && (
           <div className="bg-yellow-50 p-4 rounded text-black text-md">
             <p className="font-medium">Answer:</p>
-            <Latex>{chatResponse}</Latex>
+              <MathJax>{chatResponse}</MathJax>
           </div>
         )}
       </div>
     </div>
+    </MathJaxContext>
   );
 }
