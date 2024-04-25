@@ -121,6 +121,8 @@ export default function Home() {
       setQuestion(response.data.question);
       setChatResponse(response.data.answer);
       setShowTextInput(false);
+      setImage(null);
+      setCroppedImage(null);
     } catch (error) {
       console.error("Error calling the API:", error);
     } finally{
@@ -168,6 +170,7 @@ export default function Home() {
               onChange={handleImageChange}
               accept="image/*"
               className="hidden"
+              disabled={croppedImage}
             />
             <CameraIcon className="h-5 w-5 mr-2" />
             Upload Image
