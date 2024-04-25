@@ -107,6 +107,7 @@ export default function Home() {
       const response = await axios.post(
         "https://2yone2sjk44jgffwea6i4plb7u0zfayc.lambda-url.eu-north-1.on.aws/",
         {
+          retest: false,
           base64: base64Data,
           image_context: showTextInput ? imageInput : " ",
         },
@@ -127,20 +128,40 @@ export default function Home() {
     }
   };
 
+  const handleRetestSend = async ()=>{
+    try{
+      setLoading(true);
+      const response = await axios.post(
+        "https://2yone2sjk44jgffwea6i4plb7u0zfayc.lambda-url.eu-north-1.on.aws/",
+        {
+          retest: true,
+          question: `${question}`,
+          answer: `${chatResponse}`
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setChatResponse(response.data.answer);
+
+    } catch (error) {
+      console.error("Error calling API:", error);
+    } finally{
+      setLoading(false);
+    }
+  }
+
   return (
-    <MathJaxContext>
-    <div className="bg-gray-100 h-screen">
+
+    <div className="bg-gray-100 w-screen h-screen">
+      <MathJaxContext>
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold text-black mb-4">Doubt Solver</h1>
 
         <div className="flex flex-wrap mb-4">
-          <input
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            className="border bg-yellow-100 text-black p-2 flex-grow mb-2 sm:mr-2 sm:mb-0"
-            placeholder="Type your question..."
-          />
           <label className="relative cursor-pointer ml-2 bg-yellow-300 text-black p-2 rounded mb-2 sm:mb-0 flex items-center">
             <input
               type="file"
@@ -149,19 +170,19 @@ export default function Home() {
               className="hidden"
             />
             <CameraIcon className="h-5 w-5 mr-2" />
-            Upload
+            Upload Image
           </label>
-          <button
-            onClick={handleSubmit}
-            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
-          >
-            Submit
-          </button>
           <button
             onClick={handleImageSend}
             className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
           >
             Submit Image
+          </button>
+          <button
+            onClick={handleRetestSend}
+            className={`${loading ? 'bg-slate-200' : 'bg-yellow-300'} ${loading ? 'text-gray-400' : 'text-black'}  ${!loading && 'hover:bg-yellow-400 hover:scale-105'} ml-2 p-2 rounded mb-2 sm:ml-2 sm:mb-0`}
+          >
+            Retest
           </button>
         </div>
 
@@ -238,7 +259,8 @@ export default function Home() {
           </div>
         )}
       </div>
+      </MathJaxContext>
     </div>
-    </MathJaxContext>
+
   );
 }
